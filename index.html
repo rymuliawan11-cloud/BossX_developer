@@ -2007,6 +2007,8 @@
                                     <button class="pair-button" data-pair="BTC/USDT">BTC/USDT</button>
                                     <button class="pair-button" data-pair="ETH/USDT">ETH/USDT</button>
                                     <button class="pair-button" data-pair="SOL/USDT">SOL/USDT</button>
+                                    <button class="pair-button" data-pair="TRX/USDT">TRX/USDT</button>
+                                    <button class="pair-button" data-pair="BNB/USDT">BNB/USDT</button>
                                 </div>
                             </div>
                             <div class="market-data w-full md:w-auto">
@@ -2439,7 +2441,7 @@
             validationInterval = setInterval(() => {
                 if (!isValidationRunning) return;
                 const currentTime = Date.now() / 1000; // Waktu sekarang dalam detik
-                const timeDelta = currentTime - lastClaimTime; // Delta sejak claim
+                const timeDelta = currentTime - lastClaimTime; // Delta sejak claim terakhir
                 // Hitung reward sementara berdasarkan delta exact
                 currentValidationReward = rewardPerSecond * timeDelta;
                 document.getElementById('validation-balance').textContent = currentValidationReward.toFixed(9) + ' BossX';
@@ -3210,10 +3212,12 @@
         // Exchange Functions
         let currentSymbol = 'BTCUSDT'; // Default
         const pairMap = {
-          "BossX/USDT": "BNBUSDT",
+          "BossX/USDT": "BossXUSDT",
           "BTC/USDT": "BTCUSDT",
           "ETH/USDT": "ETHUSDT",
-          "SOL/USDT": "SOLUSDT"
+          "SOL/USDT": "SOLUSDT",
+          "TRX/USDT": "TRXUSDT",
+          "BNB/USDT": "BNBUSDT"
         };
         function initExchangePage() {
             // Setup pair buttons
@@ -3268,6 +3272,11 @@
         }
         const debouncedLoadMarketData = debounce((displayPair, realSymbol) => loadMarketData(realSymbol, displayPair), 300);
         function loadMarketData(realSymbol, displayPair) {
+            if (displayPair === 'BossX/USDT') {
+                updateMarketData(0, '+0.00%', 0, '0.00 / 0.00');
+                document.getElementById('price-change').className = 'text-lg font-bold text-green-400';
+                return;
+            }
             fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=${realSymbol}`)
                 .then(response => response.json())
                 .then(data => {
@@ -3281,7 +3290,7 @@
                     );
                     // Update color class
                     const priceChangeEl = document.getElementById('price-change');
-                    priceChangeEl.className = `text-xl font-bold ${changeColor}`;
+                    priceChangeEl.className = `text-lg font-bold ${changeColor}`;
                     localStorage.setItem('marketData', JSON.stringify(data)); // Cache
                 })
                 .catch(err => {
@@ -3299,6 +3308,12 @@
         }
         // Order Book Functions
         function loadOrderBook(symbolLower) {
+            if (symbolLower === 'bossxusdt') {
+                document.getElementById('buy-orders').innerHTML = '<tr><td colspan="3" class="text-center">No data available</td></tr>';
+                document.getElementById('sell-orders').innerHTML = '<tr><td colspan="3" class="text-center">No data available</td></tr>';
+                document.getElementById('spread').textContent = 'Spread: N/A';
+                return;
+            }
             if (ws) ws.close();
             ws = new WebSocket(`wss://stream.binance.com:9443/ws/${symbolLower}@depth@100ms`);
             ws.onmessage = function(event) {
@@ -3378,6 +3393,10 @@
             });
         }
         function loadRecentTrades(symbolLower) {
+            if (symbolLower === 'bossxusdt') {
+                document.getElementById('recent-trades').innerHTML = '<tr><td colspan="3" class="text-center">No recent trades</td></tr>';
+                return;
+            }
             const wsTrades = new WebSocket(`wss://stream.binance.com:9443/ws/${symbolLower}@trade`);
             wsTrades.onmessage = function(event) {
                 const data = JSON.parse(event.data);
