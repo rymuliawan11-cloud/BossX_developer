@@ -856,7 +856,7 @@
         /* Order Book Styles */
         .order-book-section {
             height: auto;
-            max-height: 300px;
+            max-height: none; /* Dihapus batas max-height untuk penyesuaian */
             overflow-y: auto;
             scrollbar-width: thin;
         }
@@ -2439,7 +2439,7 @@
             validationInterval = setInterval(() => {
                 if (!isValidationRunning) return;
                 const currentTime = Date.now() / 1000; // Waktu sekarang dalam detik
-                const timeDelta = currentTime - lastClaimTime; // Delta sejak claim terakhir
+                const timeDelta = currentTime - lastClaimTime; // Delta sejak claim
                 // Hitung reward sementara berdasarkan delta exact
                 currentValidationReward = rewardPerSecond * timeDelta;
                 document.getElementById('validation-balance').textContent = currentValidationReward.toFixed(9) + ' BossX';
@@ -3209,30 +3209,36 @@
         }
         // Exchange Functions
         let currentSymbol = 'BTCUSDT'; // Default
+        const pairMap = {
+          "BossX/USDT": "BNBUSDT",
+          "BTC/USDT": "BTCUSDT",
+          "ETH/USDT": "ETHUSDT",
+          "SOL/USDT": "SOLUSDT"
+        };
         function initExchangePage() {
             // Setup pair buttons
             document.querySelectorAll('.pair-button').forEach(btn => {
                 btn.addEventListener('click', () => {
                     document.querySelectorAll('.pair-button').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
-                    const pair = btn.dataset.pair;
-                    const symbol = pair.replace('/', '');
-                    currentSymbol = symbol;
-                    loadChart(symbol);
-                    debouncedLoadMarketData(pair);
-                    loadOrderBook(symbol);
-                    loadRecentTrades(symbol);
+                    const displayPair = btn.dataset.pair;
+                    const realSymbol = pairMap[displayPair];
+                    currentSymbol = realSymbol;
+                    loadChart(realSymbol);
+                    debouncedLoadMarketData(displayPair, realSymbol);
+                    loadOrderBook(realSymbol.toLowerCase());
+                    loadRecentTrades(realSymbol.toLowerCase());
                 });
             });
             // Load default
             const defaultPair = 'BossX/USDT';
-            const defaultSymbol = 'BTCUSDT';
+            const defaultRealSymbol = pairMap[defaultPair];
             document.querySelector(`[data-pair="${defaultPair}"]`).classList.add('active');
-            currentSymbol = defaultSymbol;
-            loadChart(defaultSymbol);
-            debouncedLoadMarketData(defaultPair);
-            loadOrderBook(defaultSymbol);
-            loadRecentTrades(defaultSymbol);
+            currentSymbol = defaultRealSymbol;
+            loadChart(defaultRealSymbol);
+            debouncedLoadMarketData(defaultPair, defaultRealSymbol);
+            loadOrderBook(defaultRealSymbol.toLowerCase());
+            loadRecentTrades(defaultRealSymbol.toLowerCase());
             updateBalanceDisplays(); // Ensure balances are shown
         }
         function loadChart(symbol) {
@@ -3260,10 +3266,9 @@
                 timeout = setTimeout(() => func.apply(this, args), delay);
             };
         }
-        const debouncedLoadMarketData = debounce(loadMarketData, 300);
-        function loadMarketData(pair) {
-            const symbol = pair.replace('/', '');
-            fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=${symbol}`)
+        const debouncedLoadMarketData = debounce((displayPair, realSymbol) => loadMarketData(realSymbol, displayPair), 300);
+        function loadMarketData(realSymbol, displayPair) {
+            fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=${realSymbol}`)
                 .then(response => response.json())
                 .then(data => {
                     const changePercent = data.priceChangePercent > 0 ? `+${data.priceChangePercent.toFixed(2)}%` : `${data.priceChangePercent.toFixed(2)}%`;
@@ -3293,9 +3298,9 @@
             document.getElementById('high-low').textContent = highlow;
         }
         // Order Book Functions
-        function loadOrderBook(symbol) {
+        function loadOrderBook(symbolLower) {
             if (ws) ws.close();
-            ws = new WebSocket(`wss://stream.binance.com:9443/ws/${symbol.toLowerCase()}@depth@100ms`);
+            ws = new WebSocket(`wss://stream.binance.com:9443/ws/${symbolLower}@depth@100ms`);
             ws.onmessage = function(event) {
                 const data = JSON.parse(event.data);
                 updateOrderBook(data);
@@ -3303,7 +3308,7 @@
             ws.onerror = function(error) {
                 console.error('WebSocket error:', error);
                 showErrorMessage('Koneksi data real-time gagal. Menggunakan data cache.');
-                fetchOrderBook(symbol);
+                fetchOrderBook(symbolLower.toUpperCase());
             };
         }
         function fetchOrderBook(symbol) {
@@ -3372,8 +3377,8 @@
                 }
             });
         }
-        function loadRecentTrades(symbol) {
-            const wsTrades = new WebSocket(`wss://stream.binance.com:9443/ws/${symbol.toLowerCase()}@trade`);
+        function loadRecentTrades(symbolLower) {
+            const wsTrades = new WebSocket(`wss://stream.binance.com:9443/ws/${symbolLower}@trade`);
             wsTrades.onmessage = function(event) {
                 const data = JSON.parse(event.data);
                 addRecentTrade(data);
