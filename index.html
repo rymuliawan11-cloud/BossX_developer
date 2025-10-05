@@ -708,7 +708,6 @@
         .log-entry.auto-claim {
             color: #f59e0b; /* Emas untuk auto-claim */
         }
-
         /* CSS Tambahan untuk Desain Mewah, Modern, Elegant, Canggih seperti Binance */
         .exchange-bg {
             background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
@@ -1989,7 +1988,7 @@
                             <p class="text-gray-400">Fitur Settings akan segera hadir...</p>
                         </div>
                     </div>
-                    <!-- Internal Market Page (Exchange) -->
+                    <!-- Internal Market Page (Exchange) - REVISED -->
                     <div id="exchange-page" class="page-content exchange-bg">
                         <div class="exchange-card p-4 mb-4">
                             <h1 class="text-3xl font-bold text-amber-400 mb-2 flex items-center">
@@ -1998,17 +1997,17 @@
                             </h1>
                             <p class="text-gray-400 mb-4">Trade cryptocurrency with Binance-like interface and real data.</p>
                         </div>
-                        <!-- Pair Selector and Market Data (Binance-style top bar) -->
+                        <!-- Pair Selector and Market Data -->
                         <div class="exchange-card p-4 mb-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                             <div>
                                 <h2 class="text-lg font-bold text-white mb-2">Trading Pairs</h2>
                                 <div class="flex flex-row flex-wrap gap-2 overflow-x-auto">
-                                    <button class="pair-button active" data-pair="BossX/USDT">BossX/USDT</button>
                                     <button class="pair-button" data-pair="BTC/USDT">BTC/USDT</button>
                                     <button class="pair-button" data-pair="ETH/USDT">ETH/USDT</button>
                                     <button class="pair-button" data-pair="SOL/USDT">SOL/USDT</button>
                                     <button class="pair-button" data-pair="TRX/USDT">TRX/USDT</button>
                                     <button class="pair-button" data-pair="BNB/USDT">BNB/USDT</button>
+                                    <button class="pair-button" data-pair="BossX/USDT">BossX/USDT</button>
                                 </div>
                             </div>
                             <div class="market-data w-full md:w-auto">
@@ -2030,9 +2029,9 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Main Trading Area (Binance-like Grid) -->
+                        <!-- Main Trading Area -->
                         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4" style="height: 90vh;">
-                            <!-- Center: Large Chart -->
+                            <!-- Chart -->
                             <div class="exchange-card p-4 col-span-3">
                                 <h2 class="text-lg font-bold text-white mb-4 flex items-center">
                                     <i data-lucide="trending-up" class="w-5 h-5 mr-2 text-amber-400"></i>
@@ -2042,13 +2041,13 @@
                                     <div id="tradingview-chart" class="h-full w-full"></div>
                                 </div>
                             </div>
-                            <!-- Order Book Buy (Left below chart) -->
+                            <!-- Buy Orders -->
                             <div class="exchange-card p-4 col-span-1 lg:col-span-1.5">
                                 <h2 class="text-lg font-bold text-white mb-4 flex items-center">
                                     <i data-lucide="book-open" class="w-5 h-5 mr-2 text-amber-400"></i>
                                     Buy Orders
                                 </h2>
-                                <div class="order-book-section mb-4">
+                                <div class="order-book-section mb-4 max-h-80 overflow-y-auto">
                                     <table class="w-full order-book">
                                         <thead>
                                             <tr>
@@ -2057,20 +2056,19 @@
                                                 <th>Total</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="buy-orders" class="buy-order">
-                                            <tr class="skeleton-loading"><td colspan="3" class="h-4 bg-gray-700 rounded"></td></tr>
-                                            <tr class="skeleton-loading"><td colspan="3" class="h-4 bg-gray-700 rounded"></td></tr>
+                                        <tbody id="buy-orders">
+                                            <tr><td colspan="3" class="text-center py-4 text-gray-500">Loading...</td></tr>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
-                            <!-- Order Book Sell (Right below chart) -->
+                            <!-- Sell Orders -->
                             <div class="exchange-card p-4 col-span-1 lg:col-span-1.5">
                                 <h2 class="text-lg font-bold text-white mb-4 flex items-center">
                                     <i data-lucide="book-open" class="w-5 h-5 mr-2 text-amber-400"></i>
                                     Sell Orders
                                 </h2>
-                                <div class="order-book-section mb-4">
+                                <div class="order-book-section mb-4 max-h-80 overflow-y-auto">
                                     <table class="w-full order-book">
                                         <thead>
                                             <tr>
@@ -2079,13 +2077,12 @@
                                                 <th>Total</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="sell-orders" class="sell-order">
-                                            <tr class="skeleton-loading"><td colspan="3" class="h-4 bg-gray-700 rounded"></td></tr>
-                                            <tr class="skeleton-loading"><td colspan="3" class="h-4 bg-gray-700 rounded"></td></tr>
+                                        <tbody id="sell-orders">
+                                            <tr><td colspan="3" class="text-center py-4 text-gray-500">Loading...</td></tr>
                                         </tbody>
                                     </table>
                                 </div>
-                                <div id="spread">Spread: Loading...</div>
+                                <div id="spread" class="text-center mt-2 text-amber-400">Spread: —</div>
                             </div>
                             <!-- Trade Section -->
                             <div class="exchange-card p-4 col-span-3">
@@ -2094,7 +2091,7 @@
                                     Trade
                                 </h2>
                                 <div class="grid grid-cols-2 gap-4">
-                                    <!-- Buy Trade -->
+                                    <!-- Buy -->
                                     <div class="space-y-4">
                                         <select id="buy-order-type" class="node-input">
                                             <option value="limit">Limit</option>
@@ -2103,10 +2100,9 @@
                                         <input id="buy-amount" type="number" placeholder="Amount" class="node-input" min="0" step="0.01" />
                                         <input id="buy-price" type="number" placeholder="Price (Limit)" class="node-input" min="0" step="0.01" />
                                         <p class="text-sm text-gray-400">AVBL: <span id="buy-avbl">1000 USDT</span></p>
-                                        <p class="text-sm text-gray-400">Estimasi fee: 0.1 BossX</p>
                                         <button class="trade-button buy node-button w-full" onclick="demoTrade('buy')">Buy</button>
                                     </div>
-                                    <!-- Sell Trade -->
+                                    <!-- Sell -->
                                     <div class="space-y-4">
                                         <select id="sell-order-type" class="node-input">
                                             <option value="limit">Limit</option>
@@ -2115,7 +2111,6 @@
                                         <input id="sell-amount" type="number" placeholder="Amount" class="node-input" min="0" step="0.01" />
                                         <input id="sell-price" type="number" placeholder="Price (Limit)" class="node-input" min="0" step="0.01" />
                                         <p class="text-sm text-gray-400">AVBL: <span id="sell-avbl">1000 BossX</span></p>
-                                        <p class="text-sm text-gray-400">Estimasi fee: 0.1 BossX</p>
                                         <button class="trade-button sell node-button w-full" onclick="demoTrade('sell')">Sell</button>
                                     </div>
                                 </div>
@@ -2236,7 +2231,7 @@
         };
         // P2P variables
         const p2pHistory = [];
-        let ws; // WebSocket for order book
+        let wsOrderBook = null;
         // Real-time clock
         function updateClock() {
             const now = new Date();
@@ -2305,7 +2300,7 @@
             }
             if (pageId !== 'exchange') {
                 // Close WebSocket if leaving exchange page
-                if (ws) ws.close();
+                if (wsOrderBook) wsOrderBook.close();
             }
         }
         function getTimestamp() {
@@ -2336,7 +2331,6 @@
         // Function appendLog dengan warna dan variasi
         function appendLog(message) {
             const logOutput = document.getElementById('log-output');
-           
             // Tambah variasi random
             if (message.includes('GPU#0')) {
                 const randomTemp = Math.floor(Math.random() * 15) + 65; // 65-79°C
@@ -2350,10 +2344,8 @@
                 const randomPower = Math.floor(Math.random() * 200) + 3200; // 3200-3400W
                 message = message.replace(/3416/, randomPower);
             }
-           
             // Tambah timestamp real-time
             const fullMessage = `${getTimestamp()} ${message}`;
-           
             // Buat element p baru dengan class warna
             const logEntry = document.createElement('p');
             logEntry.classList.add('log-entry');
@@ -2361,15 +2353,12 @@
                 logEntry.classList.add('auto-claim'); // Warna emas
             }
             logEntry.textContent = fullMessage;
-           
             // Tambah ke output
             logOutput.appendChild(logEntry);
-           
             // Batasi 50 entry terakhir (hapus yang lama jika >50)
             while (logOutput.children.length > 50) {
                 logOutput.removeChild(logOutput.firstChild);
             }
-           
             // Auto scroll
             logOutput.scrollTop = logOutput.scrollHeight;
         }
@@ -2458,7 +2447,6 @@
             setTimeout(() => appendLog('[INFO] Connecting to master pool BossXPool.com:4444...'), Math.random() * 2000 + 3000); // 3-5 detik
             setTimeout(() => appendLog('[STATUS] Network sync: 100%'), Math.random() * 2000 + 5000); // 5-7 detik
             setTimeout(() => appendLog('[INFO] GPU#0: 48.3 MH/s | Temp: 68°C | Fan: 82%'), Math.random() * 2000 + 7000); // 7-9 detik
-           
             // Periodic log dengan selisih detik random (1-5 detik per log baru)
             function addRandomLog() {
                 if (!isValidationRunning) return;
@@ -2468,7 +2456,6 @@
                 logInterval = setTimeout(addRandomLog, Math.floor(Math.random() * 4000) + 1000);
             }
             addRandomLog(); // Mulai loop
-           
             showSuccessMessage('Validasi dimulai! Reward mengalir per detik.');
         }
         function stopValidationRunning() {
@@ -2488,7 +2475,6 @@
             // Hitung fixed reward untuk tepat 60 detik (abaikan delta ekstra jika ada delay)
             const rewardPerSecond = stakedAmount * 0.000000038580246913580247;
             const fixedReward = rewardPerSecond * 60; // Selalu fixed ini
-           
             totalRewardBalance += fixedReward;
             shareCounter++;
             // Tampilkan notifikasi
@@ -3209,16 +3195,11 @@
             const code = document.getElementById('referral-code').value;
             copyToClipboard(code);
         }
-        // Exchange Functions
-        let currentSymbol = 'BTCUSDT'; // Default
-        const pairMap = {
-          "BossX/USDT": "BossXUSDT",
-          "BTC/USDT": "BTCUSDT",
-          "ETH/USDT": "ETHUSDT",
-          "SOL/USDT": "SOLUSDT",
-          "TRX/USDT": "TRXUSDT",
-          "BNB/USDT": "BNBUSDT"
-        };
+        // Exchange Functions - REVISED
+        let currentSymbol = 'BTCUSDT';
+        const binancePairs = ['BTC/USDT', 'ETH/USDT', 'SOL/USDT', 'TRX/USDT', 'BNB/USDT'];
+        let wsOrderBook = null;
+
         function initExchangePage() {
             // Setup pair buttons
             document.querySelectorAll('.pair-button').forEach(btn => {
@@ -3226,198 +3207,127 @@
                     document.querySelectorAll('.pair-button').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
                     const displayPair = btn.dataset.pair;
-                    const realSymbol = pairMap[displayPair];
-                    currentSymbol = realSymbol;
-                    loadChart(realSymbol);
-                    debouncedLoadMarketData(displayPair, realSymbol);
-                    loadOrderBook(realSymbol.toLowerCase());
-                    loadRecentTrades(realSymbol.toLowerCase());
+                    const isBinancePair = binancePairs.includes(displayPair);
+                    const symbol = displayPair.replace('/', '').replace('BossX', 'BOSSX'); // BOSSX/USDT → BOSSXUSDT
+
+                    // Update UI
+                    currentSymbol = symbol;
+                    loadChart(symbol, isBinancePair);
+                    if (isBinancePair) {
+                        loadMarketData(displayPair);
+                        connectOrderBook(symbol.toLowerCase());
+                    } else {
+                        // BOSSX/USDT: show empty
+                        document.getElementById('buy-orders').innerHTML = '<tr><td colspan="3" class="text-center py-4 text-gray-500">No data for BOSSX/USDT</td></tr>';
+                        document.getElementById('sell-orders').innerHTML = '<tr><td colspan="3" class="text-center py-4 text-gray-500">No data for BOSSX/USDT</td></tr>';
+                        document.getElementById('spread').textContent = 'Spread: N/A';
+                        updateMarketData(0, '+0.00%', 0, '0.00 / 0.00');
+                        document.getElementById('price-change').className = 'text-lg font-bold text-green-400';
+                    }
                 });
             });
-            // Load default
-            const defaultPair = 'BossX/USDT';
-            const defaultRealSymbol = pairMap[defaultPair];
-            document.querySelector(`[data-pair="${defaultPair}"]`).classList.add('active');
-            currentSymbol = defaultRealSymbol;
-            loadChart(defaultRealSymbol);
-            debouncedLoadMarketData(defaultPair, defaultRealSymbol);
-            loadOrderBook(defaultRealSymbol.toLowerCase());
-            loadRecentTrades(defaultRealSymbol.toLowerCase());
-            updateBalanceDisplays(); // Ensure balances are shown
+
+            // Default: BTC/USDT
+            document.querySelector('.pair-button[data-pair="BTC/USDT"]').click();
+            updateAvbl();
         }
-        function loadChart(symbol) {
-            const chartContainer = document.getElementById('tradingview-chart');
-            chartContainer.innerHTML = ''; // Clear previous widget
+
+        function loadChart(symbol, isBinancePair) {
+            const container = document.getElementById('tradingview-chart');
+            container.innerHTML = '';
+            if (!isBinancePair) {
+                container.innerHTML = '<div class="flex items-center justify-center h-full text-gray-500">Chart not available for BOSSX/USDT</div>';
+                return;
+            }
             new TradingView.widget({
                 "width": "100%",
                 "height": "100%",
                 "symbol": `BINANCE:${symbol}`,
-                "interval": "D",
+                "interval": "5",
                 "timezone": "Etc/UTC",
                 "theme": "dark",
                 "style": "1",
                 "locale": "en",
-                "toolbar_bg": "#f1f3f6",
+                "toolbar_bg": "#1a1a2e",
                 "enable_publishing": false,
-                "allow_symbol_change": true,
+                "allow_symbol_change": false,
                 "container_id": "tradingview-chart"
             });
         }
-        function debounce(func, delay) {
-            let timeout;
-            return function(...args) {
-                clearTimeout(timeout);
-                timeout = setTimeout(() => func.apply(this, args), delay);
-            };
-        }
-        const debouncedLoadMarketData = debounce((displayPair, realSymbol) => loadMarketData(realSymbol, displayPair), 300);
-        function loadMarketData(realSymbol, displayPair) {
-            if (displayPair === 'BossX/USDT') {
-                updateMarketData(0, '+0.00%', 0, '0.00 / 0.00');
-                document.getElementById('price-change').className = 'text-lg font-bold text-green-400';
-                return;
-            }
-            fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=${realSymbol}`)
-                .then(response => response.json())
+
+        function loadMarketData(displayPair) {
+            const symbol = displayPair.replace('/', '');
+            fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=${symbol}`)
+                .then(res => res.json())
                 .then(data => {
-                    const changePercent = data.priceChangePercent > 0 ? `+${data.priceChangePercent.toFixed(2)}%` : `${data.priceChangePercent.toFixed(2)}%`;
-                    const changeColor = data.priceChangePercent > 0 ? 'text-green-400' : 'text-red-400';
+                    const change = parseFloat(data.priceChangePercent);
+                    const changeStr = change >= 0 ? `+${change.toFixed(2)}%` : `${change.toFixed(2)}%`;
+                    const changeColor = change >= 0 ? 'text-green-400' : 'text-red-400';
                     updateMarketData(
                         parseFloat(data.lastPrice),
-                        changePercent,
+                        changeStr,
                         parseFloat(data.quoteVolume),
                         `${parseFloat(data.highPrice).toFixed(2)} / ${parseFloat(data.lowPrice).toFixed(2)}`
                     );
-                    // Update color class
-                    const priceChangeEl = document.getElementById('price-change');
-                    priceChangeEl.className = `text-lg font-bold ${changeColor}`;
-                    localStorage.setItem('marketData', JSON.stringify(data)); // Cache
+                    document.getElementById('price-change').className = `text-lg font-bold ${changeColor}`;
                 })
-                .catch(err => {
-                    console.error('Error fetching market data:', err);
-                    const cachedData = JSON.parse(localStorage.getItem('marketData')) || {};
-                    updateMarketData(cachedData.lastPrice || 0, cachedData.priceChangePercent || '+0.00%', cachedData.quoteVolume || 0, `${cachedData.highPrice || 0} / ${cachedData.lowPrice || 0}`);
-                    showErrorMessage('Gagal load data market. Menggunakan data cache.');
+                .catch(() => {
+                    updateMarketData(0, '+0.00%', 0, '0.00 / 0.00');
+                    document.getElementById('price-change').className = 'text-lg font-bold text-green-400';
                 });
         }
+
         function updateMarketData(price, change, volume, highlow) {
-            document.getElementById('current-price').textContent = `$${price.toLocaleString()}`;
+            document.getElementById('current-price').textContent = `$${price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
             document.getElementById('price-change').textContent = change;
-            document.getElementById('volume').textContent = `$${volume.toLocaleString()}`;
+            document.getElementById('volume').textContent = `$${volume.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
             document.getElementById('high-low').textContent = highlow;
         }
-        // Order Book Functions
-        function loadOrderBook(symbolLower) {
-            if (symbolLower === 'bossxusdt') {
-                document.getElementById('buy-orders').innerHTML = '<tr><td colspan="3" class="text-center">No data available</td></tr>';
-                document.getElementById('sell-orders').innerHTML = '<tr><td colspan="3" class="text-center">No data available</td></tr>';
-                document.getElementById('spread').textContent = 'Spread: N/A';
-                return;
-            }
-            if (ws) ws.close();
-            ws = new WebSocket(`wss://stream.binance.com:9443/ws/${symbolLower}@depth@100ms`);
-            ws.onmessage = function(event) {
+
+        function connectOrderBook(symbol) {
+            if (wsOrderBook) wsOrderBook.close();
+            wsOrderBook = new WebSocket(`wss://stream.binance.com:9443/ws/${symbol}@depth`);
+            wsOrderBook.onmessage = (event) => {
                 const data = JSON.parse(event.data);
                 updateOrderBook(data);
             };
-            ws.onerror = function(error) {
-                console.error('WebSocket error:', error);
-                showErrorMessage('Koneksi data real-time gagal. Menggunakan data cache.');
-                fetchOrderBook(symbolLower.toUpperCase());
-            };
         }
-        function fetchOrderBook(symbol) {
-            fetch(`https://api.binance.com/api/v3/depth?symbol=${symbol}&limit=50`)
-                .then(response => response.json())
-                .then(data => updateOrderBook(data))
-                .catch(err => console.error('Error fetching order book:', err));
-            // Refresh every 5 seconds
-            setTimeout(() => fetchOrderBook(symbol), 5000);
-        }
-        let asks = []; // For spread calculation
-        let bids = []; // For spread calculation
+
         function updateOrderBook(data) {
-            requestAnimationFrame(() => {
-                // Update global asks and bids for spread
-                asks = data.a || data.asks;
-                bids = data.b || data.bids;
-                // Clear skeleton
-                document.getElementById('buy-orders').innerHTML = '';
-                document.getElementById('sell-orders').innerHTML = '';
-                // Enhanced with depth bars
-                const maxVolume = Math.max(...asks.map(a => parseFloat(a[1])), ...bids.map(b => parseFloat(b[1])));
-                // Sells (asks) on top, highest price first (reverse asks since they are low to high)
-                const sellOrders = document.getElementById('sell-orders');
-                asks.slice(0, 20).reverse().forEach(ask => {
-                    const price = parseFloat(ask[0]).toFixed(2);
-                    const amount = parseFloat(ask[1]).toFixed(6);
-                    const total = (parseFloat(ask[0]) * parseFloat(ask[1])).toFixed(2);
-                    const width = (parseFloat(ask[1]) / maxVolume * 100) + '%';
-                    const row = document.createElement('tr');
-                    row.className = 'relative';
-                    row.innerHTML = `
-                        <td class="sell-order">${price}</td>
-                        <td>${amount}</td>
-                        <td>${total}</td>
-                        <div class="depth-bar sell-depth" style="width: ${width};"></div>
-                    `;
-                    sellOrders.appendChild(row);
-                });
-                // Buys (bids) below, highest first (bids are high to low)
-                const buyOrders = document.getElementById('buy-orders');
-                bids.slice(0, 20).forEach(bid => {
-                    const price = parseFloat(bid[0]).toFixed(2);
-                    const amount = parseFloat(bid[1]).toFixed(6);
-                    const total = (parseFloat(bid[0]) * parseFloat(bid[1])).toFixed(2);
-                    const width = (parseFloat(bid[1]) / maxVolume * 100) + '%';
-                    const row = document.createElement('tr');
-                    row.className = 'relative';
-                    row.innerHTML = `
-                        <td class="buy-order">${price}</td>
-                        <td>${amount}</td>
-                        <td>${total}</td>
-                        <div class="depth-bar buy-depth" style="width: ${width};"></div>
-                    `;
-                    buyOrders.appendChild(row);
-                });
-                // Update spread
-                if (asks.length > 0 && bids.length > 0) {
-                    const bestBid = parseFloat(bids[0][0]);
-                    const bestAsk = parseFloat(asks[0][0]);
-                    const spreadValue = (bestAsk - bestBid).toFixed(2);
-                    const spreadPercent = ((bestAsk - bestBid) / bestBid * 100).toFixed(2);
-                    document.getElementById('spread').textContent = `Spread: ${spreadValue} (${spreadPercent}%)`;
-                } else {
-                    document.getElementById('spread').textContent = 'Spread: Loading...';
-                }
+            const maxDepth = 15;
+            const asks = data.a.slice(0, maxDepth).reverse(); // Sells (high to low)
+            const bids = data.b.slice(0, maxDepth);           // Buys (high to low)
+
+            // Update sells
+            let sellHTML = '';
+            asks.forEach(([price, qty]) => {
+                const total = (parseFloat(price) * parseFloat(qty)).toFixed(2);
+                sellHTML += `<tr><td class="sell-order">${parseFloat(price).toFixed(2)}</td><td>${parseFloat(qty).toFixed(6)}</td><td>${total}</td></tr>`;
             });
-        }
-        function loadRecentTrades(symbolLower) {
-            if (symbolLower === 'bossxusdt') {
-                document.getElementById('recent-trades').innerHTML = '<tr><td colspan="3" class="text-center">No recent trades</td></tr>';
-                return;
+            document.getElementById('sell-orders').innerHTML = sellHTML || '<tr><td colspan="3" class="text-center">No data</td></tr>';
+
+            // Update buys
+            let buyHTML = '';
+            bids.forEach(([price, qty]) => {
+                const total = (parseFloat(price) * parseFloat(qty)).toFixed(2);
+                buyHTML += `<tr><td class="buy-order">${parseFloat(price).toFixed(2)}</td><td>${parseFloat(qty).toFixed(6)}</td><td>${total}</td></tr>`;
+            });
+            document.getElementById('buy-orders').innerHTML = buyHTML || '<tr><td colspan="3" class="text-center">No data</td></tr>';
+
+            // Update spread
+            if (asks.length > 0 && bids.length > 0) {
+                const bestAsk = parseFloat(asks[0][0]);
+                const bestBid = parseFloat(bids[0][0]);
+                const spread = ((bestAsk - bestBid) / bestBid * 100).toFixed(3);
+                document.getElementById('spread').textContent = `Spread: ${spread}%`;
             }
-            const wsTrades = new WebSocket(`wss://stream.binance.com:9443/ws/${symbolLower}@trade`);
-            wsTrades.onmessage = function(event) {
-                const data = JSON.parse(event.data);
-                addRecentTrade(data);
-            };
         }
-        function addRecentTrade(trade) {
-            const tradesBody = document.getElementById('recent-trades');
-            const row = document.createElement('tr');
-            const sideColor = trade.m ? 'text-red-400' : 'text-green-400'; // m = maker (sell?)
-            row.innerHTML = `
-                <td class="p-2 ${sideColor}">${parseFloat(trade.p).toFixed(2)}</td>
-                <td class="p-2 text-white">${parseFloat(trade.q).toFixed(4)}</td>
-                <td class="p-2 text-gray-400">${new Date(trade.T).toLocaleTimeString()}</td>
-            `;
-            tradesBody.prepend(row);
-            if (tradesBody.children.length > 50) tradesBody.removeChild(tradesBody.lastChild);
-        }
-        function demoTrade(type) {
-            showSuccessMessage(`${type.toUpperCase()} order demo berhasil! (Tidak ada transaksi nyata)`);
-        }
+
+        // Cleanup on page exit
+        window.addEventListener('beforeunload', () => {
+            if (wsOrderBook) wsOrderBook.close();
+        });
+
         // Tambahkan logic untuk order type
         document.addEventListener('change', function(e) {
             if (e.target.id === 'buy-order-type') {
@@ -3431,12 +3341,13 @@
                 priceInput.title = e.target.value === 'market' ? 'Harga otomatis untuk market order' : '';
             }
         });
+
         // Update AVBL
         function updateAvbl() {
             document.getElementById('buy-avbl').textContent = usdtBalance.toFixed(2) + ' USDT';
             document.getElementById('sell-avbl').textContent = bossxBalance.toFixed(9) + ' BossX';
         }
-        updateAvbl();
+
         // Event Listeners
         document.addEventListener('DOMContentLoaded', function() {
             // Sidebar toggle
@@ -3522,6 +3433,7 @@
                 showSuccessMessage('Log berhasil di-clear!');
             });
         });
+
         // Initialize
         window.addEventListener('load', function() {
             setInterval(updateClock, 1000);
@@ -3538,7 +3450,9 @@
                 showSuccessMessage('Selamat datang di BossX Crypto Exchange Platform!');
             }, 1000);
         });
+
         console.log('BossX Crypto Exchange Platform - Sistem Reward Per Detik berhasil dimuat!');
+
         // =============================
         // CHAT ROOM INTEGRATION
         // =============================
@@ -3708,14 +3622,12 @@
                                                         card.stats
                                                     )
                                                 ),
-                                               
                                                 h('h3', { className: `text-xl font-bold ${card.textColor} mb-2 group-hover:text-white transition-colors duration-300` },
                                                     card.title
                                                 ),
                                                 h('p', { className: "text-gray-400 text-sm leading-relaxed group-hover:text-gray-300 transition-colors duration-300" },
                                                     card.description
                                                 ),
-                                               
                                                 // Hover Effect Gradient
                                                 h('div', { className: `absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${card.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500` })
                                             )
@@ -3736,7 +3648,6 @@
                                         )
                                     )
                                 ),
-                               
                                 h('div', { className: "bg-gray-900/50 border border-gray-700 backdrop-blur-sm rounded-lg p-6" },
                                     h('div', { className: "flex items-center gap-4" },
                                         h('div', { className: "p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl" },
